@@ -1,0 +1,298 @@
+/* ============================================
+   SWIPER CONTAINER
+============================================ */
+.bfs-swiper-container {
+  width: 100%;
+  padding: 10px 0 40px 0;
+}
+
+.swiper-wrapper {
+  align-items: stretch;
+}
+.static-sizes { display: none; }
+
+/* ============================================
+   CARD DEL PRODUCTO
+============================================ */
+.bfs-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* ============================================
+   IMAGEN DEL PRODUCTO
+============================================ */
+.bfs-card-img {
+  width: 100%;
+  background: #f7f7f7;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bfs-card-img img {
+  width: 100%;
+  height: 260px; /* ALTURA FIJA DESKTOP */
+  object-fit: contain;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .bfs-card-img img {
+    height: 200px;
+  }
+}
+
+/* ============================================
+   TÍTULO
+============================================ */
+.bfs-card-title {
+  margin-top: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #653423;
+  min-height: 40px;
+}
+
+/* ============================================
+   PRECIO
+============================================ */
+.bfs-card-price {
+  margin-top: 6px;
+  font-size: 17px;
+  font-weight: bold;
+  color: #111;
+}
+
+/* ============================================
+   COLORES (BULLETS) — 1 fila si cabe, si no 2 (máx)
+============================================ */
+.bfs-card-colors{
+  --bfs-dot: 18px;
+  --bfs-gap-x: 12px;  /* más espacio horizontal */
+  --bfs-gap-y: 10px;  /* más espacio vertical */
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--bfs-gap-y) var(--bfs-gap-x);
+  align-items: center;
+
+  margin-top: 6px;
+  margin-bottom: 10px;
+
+  /* evita recortes (hover) y limita a 2 filas */
+  padding: 2px 0;
+  max-height: calc(var(--bfs-dot) * 2 + var(--bfs-gap-y) + 4px);
+  overflow: hidden;
+}
+
+.bfs-color-dot{
+  width: var(--bfs-dot);
+  height: var(--bfs-dot);
+  border-radius: 999px;
+  display: inline-block;
+  cursor: pointer;
+
+  border: 2px solid rgba(0,0,0,.18);
+  box-sizing: border-box;
+
+  transition: transform .15s ease, border-color .15s ease;
+}
+
+.bfs-color-dot:hover{
+  transform: scale(1.08); /* 1.2 te lo corta sí o sí */
+  border-color: rgba(0,0,0,.65);
+}
+
+.bfs-color-dot.active{
+  border-color: rgba(0,0,0,.85);
+  outline: 2px solid rgba(255,255,255,.9);
+  outline-offset: 2px;
+}
+
+@media (max-width: 420px){
+  .bfs-card-colors{ --bfs-dot: 16px; --bfs-gap-x: 10px; --bfs-gap-y: 8px; }
+}
+
+/* ============================================
+   TALLAS — mismo layout que COLORES (2 filas máx)
+============================================ */
+.bfs-card-sizes{
+  --bfs-size-dot: 34px;
+  --bfs-gap-x: 12px;
+  --bfs-gap-y: 10px;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--bfs-gap-y) var(--bfs-gap-x);
+  align-items: center;
+
+  margin-top: 6px;
+  margin-bottom: 10px;
+
+  /* limita a 2 filas */
+  padding: 2px 0;
+  max-height: calc(var(--bfs-size-dot) * 2 + var(--bfs-gap-y) + 4px);
+  overflow: hidden;
+}
+
+/* Cada talla como círculo (dot) */
+.bfs-size{
+  width: var(--bfs-size-dot);
+  height: var(--bfs-size-dot);
+  border-radius: 999px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+
+  background: rgba(0,0,0,.04);
+  border: 2px solid rgba(0,0,0,.12);
+  box-sizing: border-box;
+
+  user-select: none;
+  transition: transform .15s ease, border-color .15s ease;
+}
+
+.bfs-size:hover{
+  transform: scale(1.05);
+  border-color: rgba(0,0,0,.35);
+}
+
+/* Opcional (si un día quieres marcar una talla activa desde JS) */
+.bfs-size.is-active{
+  border-color: rgba(0,0,0,.85);
+  outline: 2px solid rgba(255,255,255,.9);
+  outline-offset: 2px;
+}
+
+@media (max-width: 420px){
+  .bfs-card-sizes{
+    --bfs-size-dot: 30px;
+    --bfs-gap-x: 10px;
+    --bfs-gap-y: 8px;
+  }
+  .bfs-size{
+    font-size: 13px;
+  }
+}
+
+
+/* ============================================
+   BOTÓN VER PRODUCTO
+============================================ */
+.bfs-card-button {
+  margin-top: auto;
+  background: #111;
+  color: #fff !important;
+  padding: 10px 14px;
+  text-align: center;
+  border-radius: 8px;
+  display: block;
+  font-size: 14px;
+  text-decoration: none;
+  transition: background .2s ease;
+}
+
+.bfs-card-button:hover {
+  background: #000;
+}
+
+/* ============================================
+   SWIPER NAVIGATION BUTTONS
+============================================ */
+.bfs-swiper-prev,
+.bfs-swiper-next {
+  color: #000 !important;
+  background: #fff;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  top: 45%;
+}
+
+.bfs-swiper-prev::after,
+.bfs-swiper-next::after {
+  font-size: 16px;
+}
+/* El slide debe estirar y permitir que la card ocupe el alto */
+.bfs-swiper-container .swiper-wrapper {
+  align-items: stretch;
+}
+
+.bfs-swiper-container .swiper-slide {
+  height: none!important;
+  display: flex;
+}
+
+/* Card: layout en columna + alto completo */
+.bfs-swiper-container .bfs-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+/* Imagen con alto fijo para igualar cards */
+.bfs-swiper-container .bfs-card-img {
+  height: 240px; /* ajusta si quieres más/menos */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.bfs-swiper-container .bfs-card-img-main {
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Título: máximo 2 líneas + reserva de altura */
+.bfs-swiper-container .bfs-card-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 44px; /* ~2 líneas */
+}
+
+/* Precio: reserva espacio aunque esté vacío */
+.bfs-swiper-container .bfs-card-price {
+  min-height: 28px;
+}
+
+/* Colores: reserva una fila */
+.bfs-swiper-container .bfs-card-colors {
+  min-height: 26px;
+}
+
+/* Tallas: reserva hasta 2 filas para evitar que crezca la card */
+.bfs-swiper-container .bfs-card-sizes {
+  min-height: 74px; /* ~2 filas de chips */
+  max-height: 74px;
+  overflow: hidden; /* cambia a auto si prefieres scroll */
+}
+
+/* Botón siempre abajo */
+.bfs-swiper-container .bfs-card-button {
+  margin-top: auto;
+}
+.swiper-wrapper {
+height:20rem!important;
+    
+}
+}

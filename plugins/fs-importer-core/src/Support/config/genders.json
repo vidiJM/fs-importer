@@ -1,0 +1,24 @@
+{
+  "Infantil": [
+    "infantil",
+    "kid",
+    "kids",
+    "junior",
+    "jr",
+    "nino",
+    "ninos",
+    "nina",
+    "ninas"
+  ],
+  "Hombre": [
+    "hombre",
+    "men",
+    "homem",
+    "man"
+  ],
+  "Mujer": [
+    "mujer",
+    "women",
+    "w"
+  ]
+}

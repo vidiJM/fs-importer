@@ -1,0 +1,71 @@
+{
+  "BLANCO": [
+    "blanco",
+    "white",
+    "wht",
+    "off white",
+    "ivory",
+    "blancas"
+  ],
+  "NEGRO": [
+    "negro",
+    "black",
+    "bk"
+  ],
+  "AZUL": [
+    "azul",
+    "azul-marino",
+    "marino",
+    "navy",
+    "royal",
+    "azul-royal",
+    "azul-marino",
+    "azules"
+  ],
+  "MORADO": [
+  "morado",
+  "violeta",
+  "purple"
+],
+  "ROJO": [
+    "rojo",
+    "red"
+  ],
+  "AMARILLO": [
+    "amarillo",
+    "yellow",
+    "fluor",
+    "amarillo-fluor"
+  ],
+  "VERDE": [
+    "verde",
+    "green",
+    "lima",
+    "verde-lima"
+  ],
+  "GRIS": [
+    "gris",
+    "grey",
+    "gray",
+    "plateado",
+    "silver"
+  ],
+  "NARANJA": [
+    "naranja",
+    "orange"
+  ],
+  "ROSA": [
+    "rosa",
+    "pink",
+    "fucsia"
+  ],
+  "MARRON": [
+    "marron",
+    "beige",
+    "brown",
+    "cuero"
+  ],
+  "MULTICOLOR": [
+    "multicolor"
+  ]
+}

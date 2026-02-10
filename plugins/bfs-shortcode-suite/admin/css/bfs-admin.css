@@ -1,0 +1,142 @@
+/* BFS Shortcode Suite – Admin UI */
+.bfs-shortcodes-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 16px 0 20px;
+}
+
+.bfs-shortcodes-header h1 {
+    margin: 0;
+}
+
+.bfs-shortcodes-subtitle {
+    color: #646970;
+    margin: 6px 0 0;
+}
+
+.bfs-shortcodes-grid {
+    display: inline;
+    gap: 16px;
+}
+
+.bfs-sc-card {
+    background: #fff;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    padding: 20px 20px 20px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.bfs-sc-card__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.bfs-sc-card__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #f6f7f7;
+    border: 1px solid #e5e5e5;
+    font-weight: 600;
+}
+
+.bfs-sc-card__code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 12px;
+    background: #0b0f19;
+    color: #fff;
+    padding: 8px 10px;
+    border-radius: 10px;
+    overflow-x: auto;
+    white-space: nowrap;
+    margin: 0 0 12px;
+}
+
+.bfs-sc-card__meta {
+    display: grid;
+    gap: 8px;
+    margin: 0 0 10px;
+}
+
+.bfs-sc-card__meta dt {
+    font-weight: 600;
+    color: #1d2327;
+}
+
+.bfs-sc-card__meta dd {
+    margin: 0;
+    color: #50575e;
+}
+
+.bfs-sc-card__params {
+    margin: 10px 0 0;
+    padding-left: 18px;
+    color: #50575e;
+}
+
+.bfs-sc-card__params li {
+    margin: 6px 0;
+}
+
+.bfs-sc-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.bfs-sc-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid #dcdcde;
+    background: #fff;
+    color: #1d2327;
+    font-size: 12px;
+}
+
+@media (max-width: 782px) {
+    .bfs-shortcodes-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+
+/* Tabs count bubble */
+.bfs-tab-count{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:20px;
+    height:18px;
+    padding:0 6px;
+    margin-left:6px;
+    border-radius:999px;
+    font-size:11px;
+    line-height:18px;
+    background:#f0f0f1;
+    color:#1d2327;
+}
+
+/* Toolbar */
+.bfs-admin-toolbar{
+    margin: 14px 0 8px;
+    padding: 12px 14px;
+    background: #fff;
+    border: 1px solid #dcdcde;
+    border-radius: 12px;
+}
+.bfs-admin-toolbar .regular-text{
+    width: min(520px, 100%);
+}

@@ -1,0 +1,171 @@
+/* Product Grid (premium, consistent cards) */
+.bfs-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap: clamp(14px, 2vw, 22px);
+}
+
+@media (min-width: 768px){
+  .bfs-grid{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+}
+@media (min-width: 1200px){
+  .bfs-grid{ grid-template-columns:repeat(4,minmax(0,1fr)); }
+}
+
+.bfs-grid a,
+.bfs-grid a:visited,
+.bfs-grid a:hover,
+.bfs-grid a:focus{
+  text-decoration:none !important;
+  color:inherit;
+}
+
+/* Card */
+.bfs-grid-card{
+  position:relative;
+  background:#fff;
+  border-radius: 4px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.bfs-grid-card:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(15,23,42,.10);
+}
+
+/* Link wraps entire card */
+.bfs-grid-link{
+  display:flex;
+  flex-direction:column;
+  height:100%;
+  color:inherit;
+}
+
+/* Media */
+.bfs-grid-media{
+  background:#F8FAFC;
+  aspect-ratio: 1 / 1; /* better for shoes */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 14px;
+}
+
+.bfs-grid-img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:contain;
+  object-position:center;
+  transition: transform .15s ease, opacity .12s ease;
+}
+
+.bfs-grid-card:hover .bfs-grid-img{
+  transform: scale(1.02);
+}
+
+/* Body */
+.bfs-grid-body{
+  padding: 12px 14px 14px;
+  display:grid;
+  gap:8px;
+  flex: 1;
+}
+
+/* Explicit colors to avoid theme inheritance issues */
+.bfs-grid-price{
+  font-size:14px;
+  font-weight:700;
+  line-height:1.2;
+  color:#0F172A;
+}
+
+.bfs-grid-title{
+  font-size:14px;
+  font-weight:700;
+  line-height:1.25;
+  letter-spacing:.2px;
+  color:#0F172A;
+}
+
+.bfs-grid-meta{
+  font-size:13px;
+  color:#475569;
+}
+
+/* Color dots */
+.bfs-grid-colors{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin-top:2px;
+}
+
+.bfs-color-dot{
+  width:10px;
+  height:10px;
+  border-radius:999px;
+  border:1px solid rgba(0,0,0,.18);
+  padding:0;
+  cursor:pointer;
+  flex:0 0 auto;
+  overflow:hidden; /* necesario para gradients */
+  background-color:#CBD5E1;
+}
+
+.bfs-color-dot:focus-visible{
+  outline:2px solid currentColor;
+  outline-offset:2px;
+}
+.bfs-color-dot.active{
+  outline:2px solid rgba(15,23,42,.35);
+  outline-offset:2px;
+}
+
+.bfs-color-more{
+  font-size:12px;
+  color:#64748B;
+  line-height:1;
+  padding-left:2px;
+}
+
+/* Optional: adidas-like hover dots if a ui class is used */
+.bfs-grid--ui-adidas .bfs-grid-colors{
+  opacity:0;
+  transform:translateY(4px);
+  transition:opacity .15s ease, transform .15s ease;
+}
+.bfs-grid--ui-adidas .bfs-grid-card:hover .bfs-grid-colors{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* Small screens: slightly tighter */
+@media (max-width: 520px){
+  .bfs-grid-media{ padding: 12px; }
+  .bfs-grid-body{ padding: 10px 12px 12px; }
+}
+
+
+/* Card clickable overlay */
+.bfs-card-link{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  display:block;
+  border-radius: 4px;
+}
+
+/* Ensure interactive controls stay above overlay link */
+.bfs-grid-colors{
+  position:relative;
+  z-index:3;
+}
+.bfs-grid-colors .bfs-color-dot{
+  position:relative;
+  z-index:3;
+}

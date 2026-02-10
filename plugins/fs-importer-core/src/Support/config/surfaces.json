@@ -1,0 +1,6 @@
+{
+  "Indoor": ["indoor", "sala", "court"],
+  "Turf": ["turf", "cesped", "césped"],
+  "Multitaco": ["multitaco", "multitacos"],
+  "Street": ["street"]
+}

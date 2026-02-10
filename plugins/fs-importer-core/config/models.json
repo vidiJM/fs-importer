@@ -1,0 +1,73 @@
+{
+  "JOMA": {
+    "TOP FLEX": {
+      "pattern": "top\\s*flex",
+      "year": true
+    },
+    "G3": {
+      "pattern": "\\bg\\s*3\\b",
+      "year": false
+    },
+    "MAXIMA": {
+      "pattern": "maxima",
+      "year": true
+    },
+    "TOLEDO": {
+      "pattern": "toledo",
+      "year": true
+    },
+    "INVITO": {
+      "pattern": "invicto",
+      "year": true
+    }
+  },
+
+  "ADIDAS": {
+    "SUPER SALA": {
+      "pattern": "super\\s*sala",
+      "year": true
+    },
+    "COPA": {
+      "pattern": "\\bcopa\\b",
+      "year": false
+    },
+    "PREDATOR CLUB": {
+      "pattern": "PREDATOR\\s+CLUB",
+      "strip_trailing_numbers": true
+    },
+    "F50 CLUB": {
+      "pattern": "F50\\s+CLUB",
+      "strip_trailing_numbers": true
+    },
+    "SUPER 2": {
+      "pattern": "SUPER\\s+2",
+      "strip_trailing_numbers": false
+    }
+  },
+
+  "MUNICH": {
+    "G3": {
+      "pattern": "\\bg\\s*3\\b",
+      "year": false
+    },
+    "CONTINENTAL": {
+      "pattern": "continental",
+      "year": false
+    },
+    "PRISMA": {
+      "pattern": "prisma",
+      "year": true
+    }
+  },
+
+  "UMBRO": {
+    "PRO II": {
+      "pattern": "pro\\s*ii",
+      "year": false
+    },
+    "BR PRO": {
+      "pattern": "br\\s*pro",
+      "year": false
+    }
+  }
+}

@@ -1,0 +1,46 @@
+.fs-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+}
+
+.fs-preview-product {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 6px;
+    padding: 14px;
+}
+
+.fs-preview-img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 8px;
+}
+
+.fs-preview-price {
+    font-weight: bold;
+    color: #1d2327;
+}
+
+.fs-preview-variant {
+    margin-top: 8px;
+}
+
+.fs-size-chip {
+    display: inline-block;
+    background: #f0f0f1;
+    border-radius: 12px;
+    padding: 2px 8px;
+    margin: 2px;
+    font-size: 12px;
+}
+
+
+
+.fs-colors {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
