@@ -1,0 +1,114 @@
+.fs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.fs-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform .2s ease;
+}
+
+.fs-card:hover {
+  transform: translateY(-4px);
+}
+
+.fs-card__image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.fs-card__body {
+  padding: 12px;
+}
+
+.fs-card__title {
+  font-size: 14px;
+  margin: 0 0 6px;
+}
+
+.fs-card__price {
+  font-weight: 600;
+}
+
+.fs-card__colors,
+.fs-card__sizes {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.fs-color-btn,
+.fs-size-btn {
+  border: 1px solid #ddd;
+  background: #fff;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all .2s ease;
+}
+
+.fs-color-btn:hover,
+.fs-size-btn:hover {
+  background: #111;
+  color: #fff;
+}
+
+.fs-card__cta {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.fs-card__colors {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.fs-color-btn {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  transition: all .2s ease;
+  padding: 0;
+}
+
+.fs-color-btn.is-active {
+  border: 2px solid #111;
+  transform: scale(1.1);
+}
+
+.fs-card__sizes {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.fs-size-btn {
+  border: 1px solid #ddd;
+  background: #fff;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.fs-size-btn.is-active {
+  background: #111;
+  color: #fff;
+}
+.fs-card__price {
+  font-weight: 700;
+  color: #111;
+}
