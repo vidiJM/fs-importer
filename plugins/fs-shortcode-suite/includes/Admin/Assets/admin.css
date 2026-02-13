@@ -1,0 +1,88 @@
+.fs-admin-wrap {
+    padding: 40px;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.fs-admin-header h1 {
+    font-size: 26px;
+    margin-bottom: 6px;
+}
+
+.fs-admin-header p {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.fs-admin-card {
+    background: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    max-width: 900px;
+}
+
+.fs-admin-card h2 {
+    margin-bottom: 24px;
+}
+
+.fs-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-bottom: 30px;
+}
+
+.fs-field label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.fs-field input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.fs-btn-primary {
+    background: #111;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+.fs-btn-primary:hover {
+    background: #000;
+}
+
+.fs-output label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.fs-code-box {
+    background: #f5f5f5;
+    padding: 14px;
+    border-radius: 6px;
+    font-family: monospace;
+    margin-bottom: 12px;
+}
+
+.fs-copy-btn {
+    background: #e5e5e5;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.fs-copy-btn:hover {
+    background: #ddd;
+}

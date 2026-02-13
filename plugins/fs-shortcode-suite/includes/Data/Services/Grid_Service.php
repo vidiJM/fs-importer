@@ -35,68 +35,71 @@ final class Grid_Service
      *     has_more: bool
      * }
      */
-    public function get_grid(array $filters, int $page = 1, int $per_page = 12): array
+     public function get_grid(array $filters, int $page = 1, int $per_page = 12): array
     {
         $page     = max(1, $page);
         $per_page = max(1, min(48, $per_page));
-
+    
         $cache_key = $this->cache->generate_key($filters, $page, $per_page);
-
-        $cached = $this->cache->get($cache_key);
-        if ($cached !== null) {
+    
+        if ($cached = $this->cache->get($cache_key)) {
             return $cached;
         }
-
+    
         /*
         ------------------------------------------------------------
         1️⃣ Obtener productos YA filtrados desde Repository
-        (offer-driven + size + color + gender + age_group + brand)
         ------------------------------------------------------------
         */
-
+    
         $product_ids = $this->repository->get_valid_product_ids($filters);
-
-        if (empty($product_ids)) {
+    
+        if (!$product_ids) {
             return $this->empty_response();
         }
-
+    
         /*
         ------------------------------------------------------------
-        2️⃣ Paginación en memoria (IDs ya limpios)
+        2️⃣ Paginación
         ------------------------------------------------------------
         */
-
-        $total     = count($product_ids);
+    
+        $total_ids = count($product_ids);
         $offset    = ($page - 1) * $per_page;
         $paged_ids = array_slice($product_ids, $offset, $per_page);
-        $has_more  = ($offset + $per_page) < $total;
-
-        if (empty($paged_ids)) {
+    
+        if (!$paged_ids) {
             return [
                 'items'    => [],
-                'total'    => $total,
+                'total'    => $total_ids,
                 'has_more' => false,
             ];
         }
-
+    
         /*
         ------------------------------------------------------------
-        3️⃣ Construcción dataset final
+        3️⃣ Construcción dataset
         ------------------------------------------------------------
         */
-
+    
         $dataset = $this->builder->build($paged_ids, $filters);
-
+    
+        // 🔒 Ajuste defensivo por si builder descarta alguno
+        $final_count = count($dataset);
+    
+        $has_more = ($offset + $per_page) < $total_ids;
+    
         $result = [
             'items'    => $dataset,
-            'total'    => $total,
+            'total'    => $total_ids,
             'has_more' => $has_more,
         ];
-
+    
         $this->cache->set($cache_key, $result);
-
+    
         return $result;
     }
+
 
     private function empty_response(): array
     {
