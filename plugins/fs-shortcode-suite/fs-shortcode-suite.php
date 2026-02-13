@@ -11,29 +11,44 @@
 
 declare(strict_types=1);
 
-if ( ! defined( 'ABSPATH' ) ) {
+if (!defined('ABSPATH')) {
     exit;
 }
 
-define( 'FS_SC_SUITE_PATH', plugin_dir_path( __FILE__ ) );
-define( 'FS_SC_SUITE_URL', plugin_dir_url( __FILE__ ) );
-define( 'FS_SC_SUITE_VERSION', '1.0.0' );
+define('FS_SC_SUITE_PATH', plugin_dir_path(__FILE__));
+define('FS_SC_SUITE_URL', plugin_dir_url(__FILE__));
+define('FS_SC_SUITE_VERSION', '1.0.0');
 
 /*
 |--------------------------------------------------------------------------
-| Cargar Autoloader primero (CRÍTICO)
+| PSR-4 Autoloader
 |--------------------------------------------------------------------------
 */
 
-require_once FS_SC_SUITE_PATH . 'includes/Core/Loader.php';
+spl_autoload_register(function (string $class) {
+
+    if (strpos($class, 'FS\\ShortcodeSuite\\') !== 0) {
+        return;
+    }
+
+    $relative = str_replace(
+        ['FS\\ShortcodeSuite\\', '\\'],
+        ['', '/'],
+        $class
+    );
+
+    $file = FS_SC_SUITE_PATH . 'includes/' . $relative . '.php';
+
+    if (file_exists($file)) {
+        require_once $file;
+    }
+});
+
+/*
+|--------------------------------------------------------------------------
+| Boot Plugin
+|--------------------------------------------------------------------------
+*/
 
 $loader = new FS\ShortcodeSuite\Core\Loader();
 $loader->init();
-
-/*
-|--------------------------------------------------------------------------
-| Ahora sí podemos cargar Plugin
-|--------------------------------------------------------------------------
-*/
-
-FS\ShortcodeSuite\Core\Plugin::init();
