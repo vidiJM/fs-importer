@@ -16,13 +16,6 @@ final class Grid_Dataset_Builder
         $this->repository = $repository;
     }
 
-    /**
-     * Construye dataset respetando filtros activos.
-     *
-     * @param array<int> $product_ids
-     * @param array<string, mixed> $filters
-     * @return array<int, array<string, mixed>>
-     */
     public function build(array $product_ids, array $filters = []): array
     {
         if (empty($product_ids)) {
@@ -34,57 +27,161 @@ final class Grid_Dataset_Builder
             $filter_color = sanitize_title($filters['color']);
         }
 
+        /*
+        ------------------------------------------------------------
+        1️⃣ Obtener TODAS las variantes en batch
+        ------------------------------------------------------------
+        */
+
+        $variants = get_posts([
+            'post_type'      => 'fs_variante',
+            'post_status'    => 'publish',
+            'post_parent__in'=> $product_ids,
+            'numberposts'    => -1,
+            'no_found_rows'  => true,
+            'update_post_meta_cache' => true,
+            'update_post_term_cache' => true,
+        ]);
+
+        if (!$variants) {
+            return [];
+        }
+
+        /*
+        ------------------------------------------------------------
+        2️⃣ Indexar variantes por producto
+        ------------------------------------------------------------
+        */
+
+        $variants_by_product = [];
+        $variant_ids = [];
+
+        foreach ($variants as $variant) {
+            $variants_by_product[$variant->post_parent][] = $variant;
+            $variant_ids[] = (int) $variant->ID;
+        }
+
+        if (empty($variant_ids)) {
+            return [];
+        }
+
+        /*
+        ------------------------------------------------------------
+        3️⃣ Obtener TODAS las ofertas en batch
+        ------------------------------------------------------------
+        */
+
+        $variant_hashes = [];
+
+        foreach ($variant_ids as $variant_id) {
+            $hash = get_post_meta($variant_id, 'fs_variant_id', true);
+            if (is_string($hash) && $hash !== '') {
+                $variant_hashes[$variant_id] = $hash;
+            }
+        }
+
+        if (empty($variant_hashes)) {
+            return [];
+        }
+
+        $offers = get_posts([
+            'post_type'      => 'fs_oferta',
+            'post_status'    => 'publish',
+            'numberposts'    => -1,
+            'no_found_rows'  => true,
+            'meta_query'     => [
+                [
+                    'key'     => 'fs_variant_id',
+                    'value'   => array_values($variant_hashes),
+                    'compare' => 'IN',
+                ],
+                [
+                    'key'     => 'fs_in_stock',
+                    'value'   => '1',
+                    'compare' => '=',
+                ],
+                [
+                    'key'     => 'fs_price',
+                    'value'   => 0,
+                    'compare' => '>',
+                    'type'    => 'NUMERIC',
+                ],
+                [
+                    'key'     => 'fs_url',
+                    'compare' => 'EXISTS',
+                ],
+            ],
+            'update_post_meta_cache' => true,
+        ]);
+
+        /*
+        ------------------------------------------------------------
+        4️⃣ Indexar ofertas por variante_hash
+        ------------------------------------------------------------
+        */
+
+        $offers_by_hash = [];
+
+        if ($offers) {
+            foreach ($offers as $offer) {
+
+                $hash = get_post_meta($offer->ID, 'fs_variant_id', true);
+                if (!is_string($hash) || $hash === '') {
+                    continue;
+                }
+
+                $offers_by_hash[$hash][] = $offer;
+            }
+        }
+
+        /*
+        ------------------------------------------------------------
+        5️⃣ Construir dataset final
+        ------------------------------------------------------------
+        */
+
         $products = [];
 
         foreach ($product_ids as $product_id) {
 
-            $product_id = (int) $product_id;
-            if ($product_id <= 0) {
-                continue;
-            }
-
-            $variants = $this->get_variants($product_id);
-            if (!$variants) {
+            if (empty($variants_by_product[$product_id])) {
                 continue;
             }
 
             $title     = get_the_title($product_id);
             $permalink = get_permalink($product_id);
 
-            if (!is_string($title) || $title === '') {
-                continue;
-            }
-
-            if (!is_string($permalink) || $permalink === '') {
+            if (!is_string($title) || !is_string($permalink)) {
                 continue;
             }
 
             $product_data = [
-                'id'        => $product_id,
+                'id'        => (int) $product_id,
                 'name'      => $title,
                 'permalink' => $permalink,
                 'colors'    => [],
             ];
 
-            foreach ($variants as $variant) {
+            foreach ($variants_by_product[$product_id] as $variant) {
 
                 $variant_id = (int) $variant->ID;
-                if ($variant_id <= 0) {
+
+                $terms = get_the_terms($variant_id, 'fs_color');
+                if (empty($terms) || is_wp_error($terms)) {
                     continue;
                 }
 
-                $color = $this->get_variant_color($variant_id);
-                if (!$color) {
+                $color = sanitize_title($terms[0]->slug ?? '');
+                if ($color === '') {
                     continue;
                 }
 
-                // Si hay filtro de color → solo ese color
                 if ($filter_color !== '' && $color !== $filter_color) {
                     continue;
                 }
 
-                $offers = $this->get_valid_offers($variant_id);
-                if (!$offers) {
+                $hash = $variant_hashes[$variant_id] ?? null;
+                if (!$hash || empty($offers_by_hash[$hash])) {
                     continue;
                 }
 
@@ -95,12 +192,13 @@ final class Grid_Dataset_Builder
                     ];
                 }
 
-                foreach ($offers as $offer) {
+                foreach ($offers_by_hash[$hash] as $offer) {
 
-                    $size  = (string) $offer['size'];
-                    $price = (float)  $offer['price'];
+                    $price = (float) get_post_meta($offer->ID, 'fs_price', true);
+                    $size  = get_post_meta($offer->ID, 'fs_size_eu', true);
+                    $url   = get_post_meta($offer->ID, 'fs_url', true);
 
-                    if ($size === '' || $price <= 0) {
+                    if (!is_string($size) || $size === '' || $price <= 0) {
                         continue;
                     }
 
@@ -110,7 +208,7 @@ final class Grid_Dataset_Builder
                     ) {
                         $product_data['colors'][$color]['sizes'][$size] = [
                             'price' => $price,
-                            'url'   => (string) $offer['url'],
+                            'url'   => esc_url_raw((string) $url),
                         ];
                     }
                 }
@@ -124,42 +222,6 @@ final class Grid_Dataset_Builder
         return $products;
     }
 
-    /**
-     * @return array<int, \WP_Post>
-     */
-    private function get_variants(int $product_id): array
-    {
-        return get_posts([
-            'post_type'      => 'fs_variante',
-            'post_status'    => 'publish',
-            'post_parent'    => $product_id,
-            'numberposts'    => -1,
-            'no_found_rows'  => true,
-            'update_post_meta_cache' => false,
-            'update_post_term_cache' => false,
-        ]);
-    }
-
-    private function get_variant_color(int $variant_id): ?string
-    {
-        $terms = get_the_terms($variant_id, 'fs_color');
-
-        if (empty($terms) || is_wp_error($terms)) {
-            return null;
-        }
-
-        $slug = $terms[0]->slug ?? null;
-
-        if (!is_string($slug) || $slug === '') {
-            return null;
-        }
-
-        return sanitize_title($slug);
-    }
-
-    /**
-     * @return array<int, string>
-     */
     private function get_variant_images(int $variant_id): array
     {
         $images = [];
@@ -182,92 +244,6 @@ final class Grid_Dataset_Builder
             }
         }
 
-        $raw2 = get_post_meta($variant_id, 'fs_images_raw', true);
-        if (is_string($raw2) && $raw2 !== '') {
-            foreach (explode(',', $raw2) as $img) {
-                $img = trim((string) $img);
-                if ($img !== '') {
-                    $images[] = esc_url_raw($img);
-                }
-            }
-        }
-
         return array_values(array_unique($images));
-    }
-
-    /**
-     * ⚠️ fs_variant_id en ofertas es HASH externo.
-     *
-     * @return array<int, array{size:string, price:float, url:string}>
-     */
-    private function get_valid_offers(int $variant_id): array
-    {
-        $variant_hash = get_post_meta($variant_id, 'fs_variant_id', true);
-
-        if (!is_string($variant_hash) || $variant_hash === '') {
-            return [];
-        }
-
-        $offers = get_posts([
-            'post_type'      => 'fs_oferta',
-            'post_status'    => 'publish',
-            'numberposts'    => -1,
-            'no_found_rows'  => true,
-            'meta_query'     => [
-                [
-                    'key'     => 'fs_variant_id',
-                    'value'   => $variant_hash,
-                    'compare' => '=',
-                ],
-                [
-                    'key'     => 'fs_in_stock',
-                    'value'   => '1',
-                    'compare' => '=',
-                ],
-                [
-                    'key'     => 'fs_price',
-                    'value'   => 0,
-                    'compare' => '>',
-                    'type'    => 'NUMERIC',
-                ],
-                [
-                    'key'     => 'fs_url',
-                    'compare' => 'EXISTS',
-                ],
-            ],
-        ]);
-
-        if (!$offers) {
-            return [];
-        }
-
-        $result = [];
-
-        foreach ($offers as $offer) {
-
-            $price = (float) get_post_meta($offer->ID, 'fs_price', true);
-            $size  = get_post_meta($offer->ID, 'fs_size_eu', true);
-            $url   = get_post_meta($offer->ID, 'fs_url', true);
-
-            if (!is_string($size) || $size === '') {
-                continue;
-            }
-
-            if ($price <= 0) {
-                continue;
-            }
-
-            if (!is_string($url) || $url === '') {
-                continue;
-            }
-
-            $result[] = [
-                'size'  => sanitize_text_field($size),
-                'price' => $price,
-                'url'   => esc_url_raw($url),
-            ];
-        }
-
-        return $result;
     }
 }

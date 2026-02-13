@@ -9,8 +9,8 @@ use FS\ShortcodeSuite\Core\Cache_Manager;
 
 defined('ABSPATH') || exit;
 
-final class Grid_Service {
-    
+final class Grid_Service
+{
     private Product_Repository $repository;
     private Grid_Dataset_Builder $builder;
     private Cache_Manager $cache;
@@ -27,180 +27,75 @@ final class Grid_Service {
 
     /**
      * Devuelve dataset paginado para el grid.
+     *
+     * @param array<string,mixed> $filters
+     * @return array{
+     *     items: array<int,mixed>,
+     *     total: int,
+     *     has_more: bool
+     * }
      */
     public function get_grid(array $filters, int $page = 1, int $per_page = 12): array
     {
         $page     = max(1, $page);
         $per_page = max(1, min(48, $per_page));
-    
+
         $cache_key = $this->cache->generate_key($filters, $page, $per_page);
-    
-        if ($cached = $this->cache->get($cache_key)) {
+
+        $cached = $this->cache->get($cache_key);
+        if ($cached !== null) {
             return $cached;
         }
-    
-        // 1️⃣ Ya vienen filtrados desde repository (offer-driven)
+
+        /*
+        ------------------------------------------------------------
+        1️⃣ Obtener productos YA filtrados desde Repository
+        (offer-driven + size + color + gender + age_group + brand)
+        ------------------------------------------------------------
+        */
+
         $product_ids = $this->repository->get_valid_product_ids($filters);
-    
-        if (!$product_ids) {
+
+        if (empty($product_ids)) {
             return $this->empty_response();
         }
-    
-        // 2️⃣ Filtro brand (producto)
-        if (!empty($filters['brand'])) {
-            $product_ids = $this->filter_products_by_taxonomy(
-                $product_ids,
-                'fs_marca',
-                sanitize_title((string) $filters['brand'])
-            );
-        }
-    
-        if (!$product_ids) {
-            return $this->empty_response();
-        }
-    
-        // 3️⃣ Paginación
+
+        /*
+        ------------------------------------------------------------
+        2️⃣ Paginación en memoria (IDs ya limpios)
+        ------------------------------------------------------------
+        */
+
         $total     = count($product_ids);
         $offset    = ($page - 1) * $per_page;
         $paged_ids = array_slice($product_ids, $offset, $per_page);
         $has_more  = ($offset + $per_page) < $total;
-    
-        if (!$paged_ids) {
+
+        if (empty($paged_ids)) {
             return [
                 'items'    => [],
                 'total'    => $total,
                 'has_more' => false,
             ];
         }
-    
-        // 4️⃣ Construcción dataset
+
+        /*
+        ------------------------------------------------------------
+        3️⃣ Construcción dataset final
+        ------------------------------------------------------------
+        */
+
         $dataset = $this->builder->build($paged_ids, $filters);
-    
+
         $result = [
             'items'    => $dataset,
             'total'    => $total,
             'has_more' => $has_more,
         ];
-    
+
         $this->cache->set($cache_key, $result);
-    
+
         return $result;
-    }
-
-
-    /**
-     * Aplica filtros de variante de forma inclusiva (AND real).
-     */
-    private function apply_variant_filters(array $product_ids, array $filters): array
-    {
-        if (empty($product_ids)) {
-            return [];
-        }
-
-        $filtered = [];
-
-        foreach ($product_ids as $product_id) {
-
-            $variants = get_posts([
-                'post_type'     => 'fs_variante',
-                'post_status'   => 'publish',
-                'post_parent'   => $product_id,
-                'numberposts'   => -1,
-                'no_found_rows' => true,
-            ]);
-
-            if (empty($variants)) {
-                continue;
-            }
-
-            foreach ($variants as $variant) {
-
-                if (!$this->variant_passes_filters($variant->ID, $filters)) {
-                    continue;
-                }
-
-                $filtered[] = $product_id;
-                break; // con una válida ya vale
-            }
-        }
-
-        return array_values(array_unique($filtered));
-    }
-
-    /**
-     * Comprueba si una variante cumple todos los filtros (AND lógico).
-     */
-    private function variant_passes_filters(int $variant_id, array $filters): bool
-    {
-        // Color
-        if (!empty($filters['color'])) {
-            if (!$this->has_term($variant_id, 'fs_color', $filters['color'])) {
-                return false;
-            }
-        }
-
-        // Gender
-        if (!empty($filters['gender'])) {
-            if (!$this->has_term($variant_id, 'fs_genero', $filters['gender'])) {
-                return false;
-            }
-        }
-
-        // Age group
-        if (!empty($filters['age_group'])) {
-            if (!$this->has_term($variant_id, 'fs_age_group', $filters['age_group'])) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Comprueba si el post tiene un término concreto.
-     */
-    private function has_term(int $post_id, string $taxonomy, string $slug): bool
-    {
-        $terms = get_the_terms($post_id, $taxonomy);
-
-        if (empty($terms) || is_wp_error($terms)) {
-            return false;
-        }
-
-        foreach ($terms as $term) {
-            if ($term->slug === $slug) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private function filter_products_by_taxonomy(
-        array $product_ids,
-        string $taxonomy,
-        string $slug
-    ): array {
-
-        $filtered = [];
-
-        foreach ($product_ids as $product_id) {
-
-            $terms = get_the_terms($product_id, $taxonomy);
-
-            if (empty($terms) || is_wp_error($terms)) {
-                continue;
-            }
-
-            foreach ($terms as $term) {
-                if ($term->slug === $slug) {
-                    $filtered[] = $product_id;
-                    break;
-                }
-            }
-        }
-
-        return $filtered;
     }
 
     private function empty_response(): array

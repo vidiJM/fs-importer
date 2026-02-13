@@ -4,36 +4,36 @@
 
 .fs-grid-wrapper {
     display: grid;
-    gap: 48px 32px;
+    gap: 56px 32px;
 }
 
-/* Desktop 4 cols */
+/* Desktop */
 @media (min-width: 1280px) {
     .fs-grid-wrapper {
         grid-template-columns: repeat(4, 1fr);
     }
 }
 
-/* Tablet 3 cols */
+/* Tablet */
 @media (min-width: 768px) and (max-width: 1279px) {
     .fs-grid-wrapper {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
-/* Small tablet 2 cols */
+/* Small tablet */
 @media (min-width: 480px) and (max-width: 767px) {
     .fs-grid-wrapper {
         grid-template-columns: repeat(2, 1fr);
-        gap: 32px 20px;
+        gap: 40px 20px;
     }
 }
 
-/* Mobile 1 col */
+/* Mobile */
 @media (max-width: 479px) {
     .fs-grid-wrapper {
         grid-template-columns: 1fr;
-        gap: 28px;
+        gap: 36px;
     }
 }
 
@@ -46,48 +46,38 @@
     display: block;
     text-decoration: none;
     color: inherit;
-}
-
-/* Nike no eleva cards */
-.fs-card:hover {
-    transform: none;
+    background: #fff;
 }
 
 
 /* =====================================
-   IMAGE WRAPPER
+   IMAGE AREA — NIKE STYLE
 ===================================== */
+
 
 .fs-card__image-wrapper {
     position: relative;
-    aspect-ratio: 1 / 1;
-    background: #f5f5f5;
+    aspect-ratio: 2 / 3;      /* Nike usa cuadrado */
+    background: #ffffff;      /* fondo limpio */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
+    width: fit-content;
 }
 
 .fs-card__image {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    transition: opacity .25s ease;
+    max-width: 95%;           /* ocupa casi todo */
+    max-height: 95%;
+    object-fit: contain;      /* mantiene proporción */
+    object-position: center;
+    transition: transform .4s ease;
 }
 
-/* Secondary image hidden */
-.fs-card__image--secondary {
-    opacity: 0;
-}
-
-/* Hover only on devices that support it */
+/* Zoom hover suave */
 @media (hover: hover) {
-
-    .fs-card:hover .fs-card__image--secondary {
-        opacity: 1;
-    }
-
-    .fs-card:hover .fs-card__image--primary {
-        opacity: 0;
+    .fs-card:hover .fs-card__image {
+        transform: scale(1.06);
     }
 }
 
@@ -97,36 +87,35 @@
 ===================================== */
 
 .fs-card__content {
-    padding-top: 16px;
+    padding: 10px;
+    line-height: 1rem;
 }
 
 /* Title */
 
 .fs-card__title {
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: 500;
     margin: 0;
-    letter-spacing: .2px;
     line-height: 1.35;
+    letter-spacing: .2px;
 }
 
-/* Sizes count */
+/* Sizes */
 
 .fs-card__sizes-count {
-    font-size: 14px;
-    color: #7a7a7a;
-    margin-top: 6px;
-    letter-spacing: .2px;
+    font-size: 13px;
+    color: #8a8a8a;
+    margin-top: 4px;
 }
 
 /* Price */
 
 .fs-card__price {
-    font-size: 15px;
-    font-weight: 500;
-    margin-top: 8px;
-    letter-spacing: .2px;
-    color:#1e293b;
+    font-size: 16px;
+    font-weight: 700;
+    margin-top: 6px;
+    color: #111;
 }
 
 
@@ -136,46 +125,44 @@
 
 .fs-card__colors {
     display: flex;
-    gap: 8px;
-    margin-top: 14px;
+    gap: 6px;
+    margin-top: 10px;
 }
 
 .fs-color-dot {
-    width: 12px;
-    height: 12px;
+    width: 11px;
+    height: 11px;
     border-radius: 50%;
-    border: 1px solid #e5e5e5;
+    border: 1px solid #e6e6e6;
     cursor: pointer;
     padding: 0;
     transition: transform .15s ease, border-color .15s ease;
 }
 
-/* Hover subtle */
 @media (hover: hover) {
     .fs-color-dot:hover {
-        transform: scale(1.12);
+        transform: scale(1.15);
     }
 }
 
-/* Active state clean */
 .fs-color-dot.is-active {
     border-color: #111;
-    transform: scale(1.12);
+    transform: scale(1.15);
 }
 
 
 /* =====================================
-   MICRO FADE-IN (optional premium feel)
+   MICRO FADE-IN
 ===================================== */
 
 .fs-card {
-    animation: fsFadeIn .4s ease both;
+    animation: fsFadeIn .35s ease both;
 }
 
 @keyframes fsFadeIn {
     from {
         opacity: 0;
-        transform: translateY(6px);
+        transform: translateY(4px);
     }
     to {
         opacity: 1;

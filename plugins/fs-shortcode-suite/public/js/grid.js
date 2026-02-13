@@ -111,38 +111,38 @@
 
         const colorData = card._data?.colors?.[color];
         if (!colorData) return;
-
+    
         card._activeColor = color;
-
+    
         const images = colorData.images || [];
         const sizes  = colorData.sizes || {};
-
-        const primary   = card.querySelector('.fs-card__image--primary');
-        const secondary = card.querySelector('.fs-card__image--secondary');
-        const priceEl   = card.querySelector('.fs-card__price');
-        const sizesEl   = card.querySelector('.fs-card__sizes-count');
-
-        /* Update images */
-
-        if (primary) primary.src = images[0] || '';
-        if (secondary) secondary.src = images[1] || images[0] || '';
-
-        /* Calculate min price */
-
+    
+        const imageEl  = card.querySelector('.fs-card__image');
+        const priceEl  = card.querySelector('.fs-card__price');
+        const sizesEl  = card.querySelector('.fs-card__sizes-count');
+    
+        /* Update image (solo una imagen) */
+    
+        if (imageEl && images[0]) {
+            imageEl.src = images[0];
+        }
+    
+        /* Precio mínimo */
+    
         const prices = Object.values(sizes)
             .map(s => s.price)
             .filter(p => typeof p === 'number' && p > 0);
-
+    
         const minPrice = prices.length ? Math.min(...prices) : 0;
-
+    
         if (priceEl) {
             priceEl.textContent = minPrice
                 ? minPrice.toFixed(2).replace('.', ',') + ' €'
                 : '';
         }
-
-        /* Update size count */
-
+    
+        /* Tallas */
+    
         if (sizesEl) {
             const totalSizes = Object.keys(sizes).length;
             sizesEl.textContent = totalSizes
@@ -194,6 +194,43 @@
 
         updateCard(card, color);
     });
+
+    document.addEventListener('mouseenter', (e) => {
+
+        const card = e.target.closest('.fs-card');
+        if (!card) return;
+    
+        const color = card._activeColor;
+        if (!color) return;
+    
+        const images = card._data?.colors?.[color]?.images;
+        if (!images || images.length < 2) return;
+    
+        const imageEl = card.querySelector('.fs-card__image');
+        if (imageEl) {
+            imageEl.src = images[1];
+        }
+    
+    }, true);
+    
+    document.addEventListener('mouseleave', (e) => {
+    
+        const card = e.target.closest('.fs-card');
+        if (!card) return;
+    
+        const color = card._activeColor;
+        if (!color) return;
+    
+        const images = card._data?.colors?.[color]?.images;
+        if (!images || !images.length) return;
+    
+        const imageEl = card.querySelector('.fs-card__image');
+        if (imageEl) {
+            imageEl.src = images[0];
+        }
+    
+    }, true);
+
 
     /* ==========================
        LOAD MORE

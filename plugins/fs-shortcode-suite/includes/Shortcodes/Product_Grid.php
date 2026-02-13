@@ -101,21 +101,7 @@ final class Product_Grid
 
         echo '<div class="fs-card__image-wrapper">';
 
-        echo '<img 
-                class="fs-card__image fs-card__image--primary" 
-                src="" 
-                alt="' . $name . '" 
-                loading="lazy" 
-                decoding="async"
-            >';
-
-        echo '<img 
-                class="fs-card__image fs-card__image--secondary" 
-                src="" 
-                alt="' . $name . '" 
-                loading="lazy" 
-                decoding="async"
-            >';
+        echo '<img class="fs-card__image" src="" alt="' . $name . '" loading="lazy" decoding="async">';
 
         echo '</div>';
 
