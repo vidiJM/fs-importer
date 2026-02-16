@@ -26,6 +26,72 @@
         let activeFilters = {};
 
         /* =============================
+           COLOR MAP (REVISADO)
+        ============================= */
+
+        const COLOR_MAP = {
+            negro: '#000000',
+            blanco: '#FFFFFF',
+            blanco_coral: '#F2ECDF',
+        
+            rojo: '#FF0000',
+        
+            azul: '#0000FF',
+            azul_marino: '#000080',
+            azul_claro: '#90D5FF',
+            azul_fucsia: '#6A00FF',
+            azul_royal: '#4169E1',   // 🔥 AÑADIDO
+        
+            verde: '#008000',
+            verde_fluor: '#39FF14',
+        
+            amarillo: '#FFFF00',
+            amarillo_fluor: '#CCFF00',
+        
+            naranja: '#FFA500',
+        
+            gris: '#808080',
+            gris_claro: '#CDCDCD',
+        
+            rosa: '#FFC0CB',
+            morado: '#800080',
+        
+            turquesa: '#40E0D0',
+        
+            oro: '#FFD700',
+            plata: '#C0C0C0',
+        
+            beige: '#F5F5DC',
+        
+            marron: '#8B4513',
+            marrón: '#8B4513',
+        
+            cuero: '#AC7434',
+            lima: '#99FF33',
+        
+            royal: '#4169E1',
+            marino: '#000080',
+            bordeaux: '#800000',
+        
+            neon: '#39FF14',
+            fucsia: '#FF00FF',
+        
+            multicolor: '#999999' // temporal fallback elegante
+        };
+
+
+        const normalize = (str) =>
+            str.trim().toLowerCase();
+
+        const resolveHex = (colorName) => {
+            const key = normalize(colorName);
+            if (!COLOR_MAP[key]) {
+                console.warn('Color no mapeado:', key);
+            }
+            return COLOR_MAP[key] || '#CCCCCC';
+        };
+
+        /* =============================
            OPEN / CLOSE
         ============================= */
 
@@ -33,8 +99,6 @@
             overlay.classList.add('is-active');
             overlay.setAttribute('aria-hidden', 'false');
             document.body.classList.add('fs-search-open');
-
-            // 🔥 Cargar SOLO filtros iniciales
             loadFiltersOnly();
         };
 
@@ -79,6 +143,7 @@
             if (!isActive) section.classList.add('active');
         });
 
+        
         /* =============================
            FILTER CLICK
         ============================= */
@@ -122,13 +187,9 @@
         const loadFiltersOnly = async () => {
 
             try {
-
                 const response = await fetch(FSSearchConfig.restUrl);
-
                 const data = await response.json();
-
                 renderDynamicFilters(data.filters || {});
-
             } catch (e) {
                 console.error(e);
             }
@@ -187,6 +248,60 @@
                     return;
                 }
 
+                if (Array.isArray(values) && key === 'color') {
+
+                    const unique = new Map();
+
+                    values.forEach(slug => {
+
+                        const normalizedSlug = normalize(slug);
+
+                        const parts = normalizedSlug.split('-');
+
+                        const hexParts = parts.map(resolveHex);
+
+                        const hexKey = [...hexParts].sort().join('|');
+
+                        if (!unique.has(hexKey)) {
+                            unique.set(hexKey, {
+                                slug: normalizedSlug,
+                                hexParts
+                            });
+                        }
+                    });
+
+                    // Convertimos los valores del Map a un Array
+                    const sortedEntries = [...unique.values()].sort((a, b) => {
+                        // Comparamos los slugs alfabéticamente
+                        return a.slug.localeCompare(b.slug);
+                    });
+                    
+                    // Ahora mapeamos sobre el array ya ordenado
+                    container.innerHTML = sortedEntries.map(entry => {
+                        let background;
+                        if (entry.slug === 'multicolor') {
+                            background = 'linear-gradient(45deg, red, orange, yellow, green, blue, purple)';
+                        } else {
+                            background = entry.hexParts.length === 1
+                                ? entry.hexParts[0]
+                                : `linear-gradient(45deg, ${entry.hexParts.join(',')})`;
+                        }
+                    
+                        return `
+                            <button type="button"
+                                data-filter="color"
+                                data-value="${entry.slug}"
+                                title="${entry.slug.replace(/-/g, ' ')}"
+                                class="fs-color-dot ${activeFilters[key] === entry.slug ? 'active' : ''}"
+                                style="background:${background}">
+                            </button>
+                        `;
+                    }).join('');
+
+                    return;
+                }
+
+                // resto filtros normales
                 if (Array.isArray(values)) {
 
                     container.innerHTML = values.map(val => `
@@ -208,23 +323,6 @@
                     `).join('');
                 }
             });
-
-            if (filters.price_min !== undefined && filters.price_max !== undefined) {
-                renderPrice(filters.price_min, filters.price_max);
-            }
-        };
-
-        const renderPrice = (min,max) => {
-
-            const container = dynamicContainers.price;
-            if (!container) return;
-
-            container.innerHTML = `
-                <div class="fs-price-range">
-                    <input type="number" data-price="min" min="${min}" max="${max}" placeholder="Min">
-                    <input type="number" data-price="max" min="${min}" max="${max}" placeholder="Max">
-                </div>
-            `;
         };
 
         /* =============================
