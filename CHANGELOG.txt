@@ -1,6 +1,6 @@
 === Changelog ===
 
-= 1.0.0 = * Initial structured architecture release * Modular plugin
+= 1.25.2 = * Initial structured architecture release * Modular plugin
 ecosystem implemented - fs-importer-core (domain layer) -
 fs-importer-sprinter (async workers & cron) - fs-shortcode-suite
 (frontend rendering) * Offer-driven Product → Variant → Offer model *
