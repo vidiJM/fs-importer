@@ -28,7 +28,7 @@ Each plugin has a single responsibility:
 
 | Plugin | Responsibility |
 |------|---------------|
-| bfs-shortcode-suite | Frontend/UI (shortcodes, rendering) |
+| fs-shortcode-suite | Frontend/UI (shortcodes, rendering) |
 | fs-importer-core | Domain logic, validation, commands, repositories |
 | fs-importer-sprinter | Async execution, cron, workers, API calls |
 
@@ -68,7 +68,7 @@ If your change breaks any of these rules, it must be redesigned.
 2. Copy plugins into WordPress:
    ```
    wp-content/plugins/
-     ├── bfs-shortcode-suite
+     ├── fs-shortcode-suite
      ├── fs-importer-core
      └── fs-importer-sprinter
    ```
@@ -76,7 +76,7 @@ If your change breaks any of these rules, it must be redesigned.
 3. Activate plugins in this order:
    1. fs-importer-core
    2. fs-importer-sprinter
-   3. bfs-shortcode-suite
+   3. fs-shortcode-suite
 
 ---
 
