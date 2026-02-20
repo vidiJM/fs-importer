@@ -1,47 +1,53 @@
 # ===================================
-# OS / System
+# WordPress Core (IGNORE ALL)
 # ===================================
-.DS_Store
-Thumbs.db
-plugins/.DS_Store
+wp-admin/
+wp-includes/
+index.php
+license.txt
+readme.html
+xmlrpc.php
+wp-*.php
 
 # ===================================
-# Editors / IDEs
-# ===================================
-.idea/
-.vscode/
-*.sublime-project
-*.sublime-workspace
-
-# ===================================
-# Node / Frontend tooling
-# ===================================
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-# ===================================
-# PHP / Composer
-# ===================================
-/vendor/
-vendor/
-composer.lock
-
-# ===================================
-# Build / Dist
-# ===================================
-dist/
-build/
-*.zip
-
-# ===================================
-# WordPress specific
+# Root config
 # ===================================
 wp-config.php
+.htaccess
+
+# ===================================
+# Uploads & Generated content
+# ===================================
 wp-content/uploads/
 wp-content/cache/
+wp-content/upgrade/
+wp-content/backups/
+wp-content/ai1wm-backups/
+
+# ===================================
+# Plugins (IGNORE ALL EXCEPT YOURS)
+# ===================================
+wp-content/plugins/*
+!wp-content/plugins/fs-shortcode-suite/
+
+# ===================================
+# Themes (IGNORE ALL EXCEPT YOURS)
+# ===================================
+wp-content/themes/*
+!wp-content/themes/astra-child/
+
+# ===================================
+# Node / Build
+# ===================================
+node_modules/
+dist/
+build/
+
+# ===================================
+# Composer
+# ===================================
+vendor/
+composer.lock
 
 # ===================================
 # Logs
@@ -55,3 +61,14 @@ logs/
 .env
 .env.*
 *.diff
+
+# ===================================
+# OS / IDE
+# ===================================
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.bak
+*.tmp
