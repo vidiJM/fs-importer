@@ -24,7 +24,7 @@ This repository is a **monorepo** that contains all plugins required to run FS I
 
 ```
 plugins/
-├── bfs-shortcode-suite/
+├── fs-shortcode-suite/
 ├── fs-importer-core/
 └── fs-importer-sprinter/
 ```
@@ -33,7 +33,7 @@ plugins/
 
 | Plugin | Responsibility |
 |------|---------------|
-| **bfs-shortcode-suite** | Frontend / UI layer (shortcodes, rendering) |
+| **fs-shortcode-suite** | Frontend / UI layer (shortcodes, rendering) |
 | **fs-importer-core** | Domain logic, validation, commands, repositories |
 | **fs-importer-sprinter** | Async execution, cron, workers, API calls |
 
@@ -97,7 +97,7 @@ git clone https://github.com/your-org/fs-importer.git
 2. Copy plugins into WordPress:
 ```
 wp-content/plugins/
-  ├── bfs-shortcode-suite
+  ├── fs-shortcode-suite
   ├── fs-importer-core
   └── fs-importer-sprinter
 ```
@@ -105,7 +105,7 @@ wp-content/plugins/
 3. Activate plugins in this order:
 1. fs-importer-core
 2. fs-importer-sprinter
-3. bfs-shortcode-suite
+3. fs-shortcode-suite
 
 ---
 
