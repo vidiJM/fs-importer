@@ -1,0 +1,16 @@
+=== Changelog ===
+
+= 1.0.0 = * Initial structured architecture release * Modular plugin
+ecosystem implemented - fs-importer-core (domain layer) -
+fs-importer-sprinter (async workers & cron) - fs-shortcode-suite
+(frontend rendering) * Offer-driven Product → Variant → Offer model *
+Custom Astra child theme integration * Archive template with dynamic
+filters * ProductQuery optimization (offer-based queries) * SEO-friendly
+archive structure * Repository renamed to botasfutsal-wp-custom
+
+= 0.9.0 = * Refactored importer logic into modular architecture *
+Separated async execution from domain logic * Improved query performance
+and caching behavior * Initial sidebar filtering system implemented
+
+= 0.8.0 = * Initial importer prototype * Basic shortcode rendering *
+Initial CPT structure (Producto, Variante, Oferta)
